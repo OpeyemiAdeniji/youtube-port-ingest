@@ -516,7 +516,6 @@ This will create a new empty dashboard. Let's get ready-to-add widgets
 
 </details>
 
-> 💡 **METRIC WIDGET GROUPINGS**  
-> It would be visually cleaner and more informative to group related widgets, such as the **Line Chart** and **Number Chart** widgets, side by side for easier comparison. You can replicate more examples by checking our dora metrics dashboard on the [demo environment](https://demo.getport.io/organization/home).
+</br>
 
-<img width="1104" alt="image" src="https://github.com/user-attachments/assets/8dd333a0-eb42-45fa-9f80-78d96f111238">`
+<img width="1104" alt="image" src="https://github.com/user-attachments/assets/8dd333a0-eb42-45fa-9f80-78d96f111238">
