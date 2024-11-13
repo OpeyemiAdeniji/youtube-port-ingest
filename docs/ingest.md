@@ -4,9 +4,11 @@ This guide provides a comprehensive walkthrough for creating a self-service acti
 > 💡 **USE-CASES**  
 > Ingest YouTube playlist data into Port for streamlined management and integration.
 > 
-> - **Content Management**: Keep track of video details within your internal software catalog.
-> - **Analytics**: Integrate video data for better insights and decision-making.
-> - **Automation**: Automatically update your Port account with video and playlist metadata.
+>  **Content Management**: Keep track of video details within your internal software catalog.
+</br>
+>  **Analytics**: Integrate video data for better insights and decision-making.
+</br>
+>  **Automation**: Automatically update your Port account with video and playlist metadata.
 
 ## Prerequisites
 
@@ -516,6 +518,9 @@ This will create a new empty dashboard. Let's get ready-to-add widgets
 
 </details>
 
-</br>
+<details>
+ <summary>Overall Dashboard View</summary>
 
 <img width="1104" alt="image" src="https://github.com/user-attachments/assets/8dd333a0-eb42-45fa-9f80-78d96f111238">
+
+</details>
