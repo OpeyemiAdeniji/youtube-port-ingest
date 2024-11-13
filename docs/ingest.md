@@ -1,348 +1,522 @@
+# Ingest YouTube Playlist Data into Port
+This guide provides a comprehensive walkthrough for creating a self-service action in Port that uses a GitHub workflow to automate the ingestion of YouTube playlist data into Port.
 
-# Ingest and Visualize YouTube Playlist Data in Port
-
-This guide takes approximately 30 minutes to complete and demonstrates the value of integrating Port with external data sources like YouTube.
+> 💡 **USE-CASES**  
+> Ingest YouTube playlist data into Port for streamlined management and integration.
+> 
+> - **Content Management**: Keep track of video details within your internal software catalog.
+> - **Analytics**: Integrate video data for better insights and decision-making.
+> - **Automation**: Automatically update your Port account with video and playlist metadata.
 
 ## Prerequisites
 
-- Ensure you have a [Port](https://www.getport.io/) account and have completed the [onboarding process](https://docs.getport.io/quickstart).
-- Access to a [GitHub](https://github.com/) repository for workflow integration.
-- API keys and credentials: Port [Client ID and Client Secret](https://docs.getport.io/build-your-software-catalog/custom-integration/api/#find-your-port-credentials), and [YouTube API Key](https://developers.google.com/youtube/v3/docs#calling-the-api).
+Ensure you have the following before getting started:
 
-## Goal of This Guide
+- **Port's GitHub Integration**: Install it by clicking [here](https://github.com/apps/getport-io/installations/select_target). This is essential for Port to interact with your GitHub repositories.
+- **Port Actions Knowledge**: Understanding how to create and use Port actions.Learn the basics [here](https://docs.getport.io/actions-and-automations/create-self-service-experiences/setup-ui-for-action/).
+- **GitHub Repository**: A repository to store your GitHub workflow file.
+- This guide assumes the presence of a blueprint. If you haven't done so yet, initiate the setup of your data model by referring to this [guide](https://docs.getport.io/build-your-software-catalog/customize-integrations/configure-data-model/) first.
 
-This guide will walk you through:
+## GitHub Secrets
 
-- Creating and configuring blueprints in Port for YouTube data.
-- Setting up a GitHub workflow to automate data ingestion from YouTube.
-- Visualizing and analyzing the ingested data in Port.
+To execute this workflow, add the following secrets to your GitHub repository:
 
----
+1. **GitHub Action Secrets**:
+   - Navigate to your repository's **Settings > Secrets and Variables > Actions**.
+   - Add these secrets:
+     - **PORT_CLIENT_ID**: Your Port Client ID [learn more](https://docs.getport.io/build-your-software-catalog/custom-integration/api/#find-your-port-credentials).
+     - **PORT_CLIENT_SECRET**: Your Port Client Secret [learn more](https://docs.getport.io/build-your-software-catalog/custom-integration/api/#find-your-port-credentials)..
+     - **YOUTUBE_API_KEY**: Your Youtube API Key [learn more](https://developers.google.com/youtube/v3/docs#calling-the-api).
 
-## Step 1: Create Blueprints in Port
+## Port Configuration
 
-### 1.1 Log in to Your Port Account
-Access Port's web app and log in with your credentials.
+### Import Youtube Resources
 
-### 1.2 Navigate to the Builder Section
-Click on **"Builder"** in the left-hand navigation menu. This is where you create and manage [blueprints](https://docs.getport.io/build-your-software-catalog/customize-integrations/configure-data-model/setup-blueprint/).
+1. **Create the `playlist` blueprint**:
+   - Navigate to the **Builder** page in Port.
+   - Click **+ Blueprint** and select **Edit JSON**.
+   - Paste the following configuration:
 
-### 1.3 Create a Blueprint for YouTube Video
-1. Click on **"New Blueprint"** at the top right corner of the Builder page.
-2. Configure the blueprint details:
-   - **Identifier**: `youtubeVideo`
-   - **Title**: `YouTube Video`
-   - **Icon**: Choose an icon representing a video (optional).
-     
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/38fe0d01-760d-4f2e-8d0d-672b8256124c">
+  <details>
+  <summary>Click to copy Playlist Blueprint JSON</summary>
 
-### Define the Schema
-Add properties to the YouTube Video blueprint with names, types, and whether they are required:
-
-#### Blueprint for YouTube Video
-- **Properties**:
-  - `videoId`: string (required)
-  - `title`: string (required)
-  - `description`: string
-  - `thumbnailUrl`: string
-  - `duration`: string
-  - `viewCount`: number
-  - `likeCount`: number
-  - `commentCount`: number
-- **Relation**: `belongs_to_playlist` to `YouTube Playlist`.
-
-<img width="1437" alt="image" src="https://github.com/user-attachments/assets/109b68a5-c29f-4d43-b79e-9e358945f0d7">
-
-**Example JSON**:
-```json
+   ```json
 {
-  "identifier": "youtubeVideo",
-  "description": "This blueprint represents a video in our software catalog",
-  "title": "YouTube Video",
-  "icon": "Widget",
-  "schema": {
-    "properties": {
-      "videoId": { "type": "string", "title": "Video ID" },
-      "title": { "type": "string", "title": "Title" },
-      "description": { "type": "string", "title": "Description" },
-      "thumbnailUrl": { "type": "string", "title": "Thumbnail URL" },
-      "duration": { "type": "string", "title": "Duration" },
-      "viewCount": { "type": "number", "title": "View Count" },
-      "likeCount": { "type": "number", "title": "Like Count" },
-      "commentCount": { "type": "number", "title": "Comment Count" }
-    },
-    "required": ["videoId", "title"]
-  },
-  "relations": {
-    "belongs_to_playlist": {
-      "title": "Belongs to Playlist",
-      "target": "youtubePlaylist",
-      "required": false,
-      "many": false
-    }
-  }
+     "identifier": "playlist",
+     "description": "This blueprint represents a YouTube playlist",
+     "title": "playlist",
+     "icon": "Widget",
+     "schema": {
+       "properties": {
+         "playlistId": {
+           "type": "string",
+           "title": "Playlist ID"
+         },
+         "title": {
+           "type": "string",
+           "title": "Title"
+         },
+         "description": {
+           "type": "string",
+           "title": "Description"
+         },
+         "thumbnailUrl": {
+           "type": "string",
+           "title": "Thumbnail URL"
+         },
+         "videoCount": {
+           "type": "number",
+           "title": "Number of Videos"
+         },
+         "created_at": {
+           "type": "string",
+           "title": "Published At"
+         }
+       },
+       "required": ["playlistId", "title"]
+     }
 }
 ```
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/f5be5730-839a-4238-8016-aedaf24eec49">
+</details>
 
-### Blueprint for YouTube Playlist
-- **Properties**:
-  - `playlistId`: string (required)
-  - `title`: string (required)
-  - `description`: string
-  - `videoCount`: number
-  - `thumbnailUrl`: string
-  - `created_at`: string
-- **Relation**: `has_videos` to `YouTube Video`.
+2. **Create the `video` blueprint**:
+   - Navigate to the **Builder** page in Port.
+   - Click **+ Blueprint** and select **Edit JSON**.
+   - Paste the following configuration:
 
-<img width="1437" alt="image" src="https://github.com/user-attachments/assets/7807873b-7cd9-469e-b4d7-f57be13808c4">
+ <details>
+ <summary>Click to copy Video Blueprint JSON</summary>
 
-**Example JSON**:
-```json
+   ```json
 {
-  "identifier": "youtubePlaylist",
-  "title": "YouTube Playlist",
-  "icon": "Widget",
-  "schema": {
-    "properties": {
-      "playlistId": { "type": "string", "title": "Playlist ID" },
-      "title": { "type": "string", "title": "Title" },
-      "description": { "type": "string", "title": "Description" },
-      "videoCount": { "type": "number", "title": "Video Count" },
-      "thumbnailUrl": { "type": "string", "title": "Thumbnail URL" },
-      "created_at": { "type": "string", "title": "CreatedAt" }
-    },
-    "required": ["playlistId", "title"]
-  },
-  "relations": {
-    "has_videos": {
-      "title": "Has Videos",
-      "target": "youtubeVideo",
-      "required": false,
-      "many": true
-    }
-  }
-}
-```
-<img width="1437" alt="image" src="https://github.com/user-attachments/assets/8e707aa2-b041-4e62-a4d9-f1a02e6baac9">
-
----
-
-## Step 2: Set Up the GitHub Workflow
-
-Create a GitHub workflow file at `.github/workflows/sync_youtube_data.yml`:
-
-```yaml
-name: Sync YouTube Data to Port
-
-on:
-  schedule:
-    - cron: '0 */12 * * *'  # Runs every 12 hours
-  workflow_dispatch:  # Manual triggers
-  push:
-    branches: [ main ]
-
-jobs:
-  sync-youtube-data:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-          
-      - name: Install dependencies
-        run: |
-          pip install google-api-python-client isodate
-
-      - name: Sync YouTube data
-        env:
-          PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
-          PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
-          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
-        run: |
-          python .github/scripts/sync_youtube.py
-```
-
-### Add Secrets
-Add the following secrets to your GitHub repository:
-
-1. Go to **Settings** > **Secrets and Variables** > **Actions**.
-2. Create secrets:
-   - `PORT_CLIENT_ID`: Your Port Client ID
-   - `PORT_CLIENT_SECRET`: Your Port Client Secret
-   - `YOUTUBE_API_KEY`: Your YouTube API Key
-
-   <img width="1440" alt="image" src="https://github.com/user-attachments/assets/cecdb05d-f314-47e8-ac84-0091a7a8c0fe">
-
----
-
-## Step 3: Implement the YouTube Data Sync Script
-
-Create a [script](https://docs.getport.io/build-your-software-catalog/custom-integration/api/#usage) (`.github/scripts/sync_youtube.py`):
-
-```python
-import requests
-import os
-from googleapiclient.discovery import build
-import time
-import isodate
-
-CLIENT_ID = os.environ.get('PORT_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('PORT_CLIENT_SECRET')
-YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
-PLAYLIST_ID = 'PL5ErBr2d3QJH0kbwTQ7HSuzvBb4zIWzhy'
-
-API_URL = 'https://api.getport.io/v1'
-
-def format_duration(youtube_duration):
-    duration_obj = isodate.parse_duration(youtube_duration)
-    minutes = int(duration_obj.total_seconds() // 60)
-    seconds = int(duration_obj.total_seconds() % 60)
-    return f"{minutes}:{seconds:02d}"
-
-credentials = {
-    'clientId': CLIENT_ID,
-    'clientSecret': CLIENT_SECRET
-}
-token_response = requests.post(f'{API_URL}/auth/access_token', json=credentials)
-access_token = token_response.json()['accessToken']
-
-headers = {
-    'Authorization': f'Bearer {access_token}'
-}
-
-youtube = build('youtube', 'v3', developerKey=YOUTUBE_API_KEY)
-
-playlist_request = youtube.playlists().list(
-    part="snippet,contentDetails,status",
-    id=PLAYLIST_ID
-)
-playlist_response = playlist_request.execute()
-playlist = playlist_response['items'][0]
-
-playlist_entity = {
-    "identifier": PLAYLIST_ID,
-    "title": playlist['snippet']['title'],
-    "properties": {
-        "playlistId": PLAYLIST_ID,
-        "title": playlist['snippet']['title'],
-        "description": playlist['snippet'].get('description', 'No description available'),
-        "videoCount": playlist['contentDetails']['itemCount'],
-        "thumbnailUrl": playlist['snippet']['thumbnails']['default']['url'], 
-        "createdAt": playlist['snippet']['publishedAt'], 
+    "identifier": "video",
+    "description": "This blueprint represents a video in our software catalog",
+    "title": "video",
+    "icon": "Widget",
+    "schema": {
+      "properties": {
+        "videoId": {
+          "type": "string",
+          "title": "Video ID"
+        },
+        "title": {
+          "type": "string",
+          "title": "Title"
+        },
+        "description": {
+          "type": "string",
+          "title": "Description"
+        },
+        "thumbnailUrl": {
+          "type": "string",
+          "title": "Thumbnail URL"
+        },
+        "duration": {
+          "type": "string",
+          "title": "Duration"
+        },
+        "viewCount": {
+          "type": "number",
+          "title": "View Count"
+        },
+        "likeCount": {
+          "type": "number",
+          "title": "Like Count"
+        },
+        "commentCount": {
+          "type": "number",
+          "title": "Comment Count"
+        }
+      },
+      "required": ["videoId", "title"]
     },
     "relations": {
-        "has_videos": []
+      "belongs_to_playlist": {
+        "title": "Belongs to Playlist",
+        "target": "playlist",
+        "required": false,
+        "many": false
+      }
     }
-}
-
-playlist_response = requests.post(
-    f'{API_URL}/blueprints/youtubePlaylist/entities?upsert=true',
-    json=playlist_entity,
-    headers=headers
-)
-print(f"Playlist sync status: {playlist_response.status_code}")
-
-video_ids = []
-next_page_token = None
-
-while True:
-    playlist_items_request = youtube.playlistItems().list(
-        part="snippet,contentDetails",
-        playlistId=PLAYLIST_ID,
-        maxResults=50,
-        pageToken=next_page_token
-    )
-    playlist_items = playlist_items_request.execute()
-    
-    err = 0
-    for item in playlist_items['items']:
-        video_id = item['contentDetails']['videoId']
-        video_ids.append(video_id)
-        
-        video_request = youtube.videos().list(
-            part="contentDetails,snippet,statistics",
-            id=video_id
-        )
-        video_response = video_request.execute()
-        video_details = video_response['items'][0]
-        
-        youtube_duration = video_details['contentDetails']['duration']
-        duration_str = format_duration(youtube_duration)
-        
-        video_entity = {
-            "identifier": video_id,
-            "title": item['snippet']['title'],
-            "properties": {
-                "title": item['snippet']['title'],
-                "videoId": video_id,
-                "description": item['snippet'].get('description', 'No description available'),
-                "thumbnailUrl": item['snippet']['thumbnails']['default']['url'],
-                "duration": duration_str,
-                "viewCount": video_details['statistics'].get('viewCount','0'),
-                "likeCount": video_details['statistics'].get('likeCount','0'),
-                "commentCount": video_details['statistics'].get('commentCount','0')
-            },
-            "relations": {
-                "belongs_to_playlist": [PLAYLIST_ID]
-            }
-        }
-        
-        video_response = requests.post(
-            f'{API_URL}/blueprints/youtubeVideo/entities?upsert=true',
-            json=video_entity,
-            headers=headers
-        )
-        print(f"Video sync status for {video_id}: {video_response.status_code}")
-        
-        time.sleep(0.1)
-    
-    next_page_token = playlist_items.get('nextPageToken')
-    if not next_page_token:
-        break
-
-playlist_entity["relations"]["has_videos"] = video_ids
-final_playlist_response = requests.post(
-    f'{API_URL}/blueprints/youtubePlaylist/entities?upsert=true',
-    json=playlist_entity,
-    headers=headers
-)
-    
 ```
+</details>
 
----
+## Creating the Port Action
 
-## Step 4: Run and Verify the Workflow
+1. Go to the **Self-Service** page in Port.
+2. Click **+ New Action** and select **Edit JSON**.
+3. Paste the following action configuration:
 
-1. **Trigger the Action**: Run the GitHub action manually or wait for the scheduled run.
-<img width="1440" alt="image" src="https://github.com/user-attachments/assets/a3b2c496-f5eb-4621-9ab0-d75eb3005f3d">
-
-3. **Check the Logs**: Review the workflow logs for the status of the ingestion process.
+<details>
+<summary>Click to copy Port Action JSON</summary>
    
-<img width="1439" alt="image" src="https://github.com/user-attachments/assets/1c46fa56-7370-421b-ba42-b9c5415471e6">
-
-4. **Verify in Port**: Ensure the data appears in your Port account with proper relationships.
+> 💡 **TIP**  
+> 
+> - `<GITHUB-ORG>` – your GitHub organization or user name.
+> - `<GITHUB-REPO-NAME>` – your GitHub repository name.
    
-   <img width="1433" alt="image" src="https://github.com/user-attachments/assets/e1d69c90-fde8-4ede-83ae-e4111fb398d6">
+   ```json
+   {
+      "identifier": "ingest-youtube-playlist",
+      "title": "Ingest Youtube Playlist",
+      "icon": "Youtrack",
+      "trigger": {
+        "type": "self-service",
+        "operation": "CREATE",
+        "userInputs": {
+          "properties": {
+            "playlistid": {
+              "type": "string",
+              "title": "playlistid"
+            }
+          },
+          "required": [
+            "playlistid"
+          ],
+          "order": []
+        },
+        "blueprintIdentifier": "playlist"
+      },
+      "invocationMethod": {
+        "type": "GITHUB",
+        "org": "<GITHUB-ORG>",
+        "repo": "<GITHUB-REPO-NAME>",
+        "workflow": "newone.yml",
+        "workflowInputs": {
+          "{{ spreadValue() }}": "{{ .inputs }}",
+          "port_context": {
+            "runId": "{{ .run.id }}",
+            "blueprint": "{{ .action.blueprint }}"
+          }
+        },
+        "reportWorkflowStatus": true
+      },
+      "requiredApproval": false
+    }
+   
+   ```
+ </details>
 
----
+## GitHub Workflow
 
-## Step 5: Visualize Data in Port
+Create a workflow file under `.github/workflows/ingest_data.yml` with the following content:
 
-Leverage Port's [visualization](https://docs.getport.io/customize-pages-dashboards-and-plugins/dashboards/) tools for insights:
+<details>
+<summary>Github Workflow Script</summary>
+  
+```yaml
+name: Update Port with YouTube Playlist Data
+on:
+  workflow_dispatch:
+    inputs:
+      playlistid:
+        description: 'ID of the YouTube playlist'
+        required: true
+      port_context:
+        description: 'Port context payload'
+        required: true
 
-- **Playlist Metrics**: Display video count and total views.
-- **Engagement Analysis**: Use dashboards to monitor likes and comments.
+jobs:
+  update_port:
+    runs-on: ubuntu-latest
+    env:
+      PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+      PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      PORT_RUN_ID: ${{ fromJson(inputs.port_context).runId }}
 
-  <img width="1435" alt="image" src="https://github.com/user-attachments/assets/17684b56-3b9d-4b74-9cc4-37c7ee165db8">
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
----
+      - name: Install jq for JSON processing
+        run: sudo apt-get install jq
 
-## Conclusion
+      - name: Fetch and Process YouTube Data using Bash
+        id: fetch_data
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          PLAYLIST_ID: ${{ inputs.playlistid }}
+          PORT_CLIENT_ID: ${{ secrets.PORT_CLIENT_ID }}
+          PORT_CLIENT_SECRET: ${{ secrets.PORT_CLIENT_SECRET }}
+        run: |
+          set -e  # Exit immediately if any command returns a non-zero status
 
-By following this guide, you can effectively ingest and visualize YouTube playlist data in Port, enabling data-driven decisions and enhancing your content strategy.
+          # Ensure environment variables are trimmed of whitespace
+          PORT_CLIENT_ID=$(echo "$PORT_CLIENT_ID" | xargs)
+          PORT_CLIENT_SECRET=$(echo "$PORT_CLIENT_SECRET" | xargs)
 
----
+          # Function to get Port access token
+          get_port_access_token() {
+            response=$(curl -s -X POST "https://api.getport.io/v1/auth/access_token" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "clientId": "'"$PORT_CLIENT_ID"'",
+                "clientSecret": "'"$PORT_CLIENT_SECRET"'"
+              }')
+
+            # Check if the response contains an error
+            if echo "$response" | grep -q '"ok":false'; then
+              echo "Error obtaining access token: $(echo "$response" | jq -r '.error' )"
+              return 1
+            fi
+
+            # Extract the access token from the response
+            access_token=$(echo "$response" | jq -r '.accessToken // empty')
+            if [ -z "$access_token" ]; then
+              echo "Failed to retrieve access token. Response: $response"
+              return 1
+            fi
+
+            echo "$access_token"
+          }
+
+          # Retrieve and sanitize the access token
+          ACCESS_TOKEN=$(get_port_access_token)
+          if [ -z "$ACCESS_TOKEN" ]; then
+            echo "Failed to obtain access token. Exiting."
+            exit 1
+          fi
+
+          echo "Access token obtained: ${ACCESS_TOKEN:0:50}..."
+
+          # Validate the JWT format
+          if ! [[ "$ACCESS_TOKEN" =~ ^[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+$ ]]; then
+            echo "Invalid JWT format detected. Please check the token generation."
+            exit 1
+          fi
+
+          # Fetch playlist details
+          playlist_response=$(curl -s "https://www.googleapis.com/youtube/v3/playlists?part=snippet,contentDetails,status&id=${PLAYLIST_ID}&key=${YOUTUBE_API_KEY}")
+          playlist_id=$(echo $playlist_response | jq -r '.items[0].id')
+          playlist_title=$(echo $playlist_response | jq -r '.items[0].snippet.title')
+          playlist_description=$(echo $playlist_response | jq -r '.items[0].snippet.description')
+          playlist_thumbnail=$(echo $playlist_response | jq -r '.items[0].snippet.thumbnails.default.url')
+          playlist_video_count=$(echo $playlist_response | jq -r '.items[0].contentDetails.itemCount')
+          playlist_published_at=$(echo $playlist_response | jq -r '.items[0].snippet.publishedAt')
+
+          # Create playlist entity payload
+          playlist_entity=$(jq -n --arg id "$playlist_id" --arg title "$playlist_title" \
+            --arg description "$playlist_description" --arg thumbnailUrl "$playlist_thumbnail" \
+            --arg videoCount "$playlist_video_count" --arg created_at "$playlist_published_at" \
+            '{
+              identifier: $id,
+              title: $title,
+              properties: {
+                playlistId: $id,
+                title: $title,
+                description: $description,
+                thumbnailUrl: $thumbnailUrl,
+                videoCount: ($videoCount | tonumber),
+                created_at: $created_at
+              }
+            }')
+
+          # Print JSON payload for validation
+          echo "Payload: $playlist_entity"
+          echo "$playlist_entity" | jq .
+
+          # Use HTTP/1.1 to avoid HTTP/2 protocol issues and capture response
+          response=$(curl --http1.1 -s -w "%{http_code}\n" -o /tmp/playlist_response.json -X POST "https://api.getport.io/v1/blueprints/playlist/entities?upsert=true" \
+            -H "Authorization: Bearer $ACCESS_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "$playlist_entity")
+
+          http_code=$(echo "$response" | head -c 1)
+          body=$(cat /tmp/playlist_response.json)
+
+          echo "HTTP Response Code: $http_code"
+          echo "Response Body: $body"
+
+          if [[ "$http_code" != "2" ]]; then
+            echo "Failed to push playlist to Port. HTTP code: $http_code"
+            echo "Response Body: $body"
+            exit 1
+          fi
+
+          # Fetch and process videos in the playlist
+          next_page_token=""
+          while :; do
+            url="https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=${PLAYLIST_ID}&key=${YOUTUBE_API_KEY}${next_page_token:+&pageToken=$next_page_token}"
+            response=$(curl -s "$url")
+            next_page_token=$(echo $response | jq -r '.nextPageToken // empty')
+
+            video_ids=$(echo $response | jq -r '.items[].snippet.resourceId.videoId')
+            for video_id in $video_ids; do
+              video_details=$(curl -s "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&id=$video_id&key=${YOUTUBE_API_KEY}")
+              video_title=$(echo $video_details | jq -r '.items[0].snippet.title')
+              video_description=$(echo $video_details | jq -r '.items[0].snippet.description')
+              video_thumbnail=$(echo $video_details | jq -r '.items[0].snippet.thumbnails.default.url')
+              video_duration=$(echo $video_details | jq -r '.items[0].contentDetails.duration')
+              video_view_count=$(echo $video_details | jq -r '.items[0].statistics.viewCount // 0')
+              video_like_count=$(echo $video_details | jq -r '.items[0].statistics.likeCount // 0')
+              video_comment_count=$(echo $video_details | jq -r '.items[0].statistics.commentCount // 0')
+
+              # Create video entity payload
+              video_entity=$(jq -n --arg id "$video_id" --arg title "$video_title" \
+                --arg description "$video_description" --arg thumbnailUrl "$video_thumbnail" \
+                --arg duration "$video_duration" --argjson viewCount "$video_view_count" \
+                --argjson likeCount "$video_like_count" --argjson commentCount "$video_comment_count" \
+                --arg playlistId "$playlist_id" \
+                '{
+                  identifier: $id,
+                  title: $title,
+                  properties: {
+                    videoId: $id,
+                    title: $title,
+                    description: $description,
+                    thumbnailUrl: $thumbnailUrl,
+                    duration: $duration,
+                    viewCount: $viewCount,
+                    likeCount: $likeCount,
+                    commentCount: $commentCount
+                  },
+                  relations: {
+                    belongs_to_playlist: $playlistId
+                  }
+                }')
+
+              # Print video payload for validation
+              echo "Video Payload: $video_entity"
+              echo "$video_entity" | jq .
+
+              # Use HTTP/1.1 to avoid HTTP/2 protocol issues and capture response
+              response=$(curl --http1.1 -s -w "%{http_code}\n" -o /tmp/video_response.json -X POST "https://api.getport.io/v1/blueprints/video/entities?upsert=true" \
+                -H "Authorization: Bearer $ACCESS_TOKEN" \
+                -H "Content-Type: application/json" \
+                -d "$video_entity")
+
+              http_code=$(echo "$response" | head -c 1)
+              body=$(cat /tmp/video_response.json)
+
+              echo "HTTP Response Code: $http_code"
+              echo "Response Body: $body"
+
+              if [[ "$http_code" != "2" ]]; then
+                echo "Failed to push video to Port. HTTP code: $http_code"
+                echo "Response Body: $body"
+                exit 1
+              fi
+            done
+
+            [[ -z "$next_page_token" ]] && break
+          done
+```
+</details>
+
+
+## Testing the Action
+
+1. On the [self-service](https://app.getport.io/self-serve) page, select the action
+2. Fill in the required properties (YouTube Playlist ID).
+3. Click **Execute** to trigger the GitHub workflow.
+
+
+## Visualization
+
+By leveraging Port's Dashboards, you can create custom dashboards to track the metrics and monitor your team's performance over time.
+
+### Dashboard Setup
+
+1. Go to your [software catalog](https://app.getport.io/organization/catalog).
+2. Click on the `+ New` button in the left sidebar.
+3. Select **New dashboard**.
+4. Name the dashboard (e.g., Playlist Metrics), choose an icon if desired, and click Create.
+   
+This will create a new empty dashboard. Let's get ready-to-add widgets
+
+
+### Adding widgets
+<details>
+ <summary>Setup Views widget</summary>
+   
+   1. `Click +` Widget and select Number Chart.
+
+   2. Title: Views, (add the metric icon).
+
+   3. Select Aggregrate by property and choose video as the Blueprint.
+
+   4. Select View Count as Property and Sum as the Function
+
+   <img width="613" alt="image" src="https://github.com/user-attachments/assets/14fec310-7bf6-42ad-b9b7-5e850c234133">
+
+   5. Click Save.
+
+</details>
+
+
+<details>
+ <summary>Setup Likes widget</summary>
+   
+   1. `Click +` Widget and select Number Chart.
+
+   2. Title: Likes, (add the star icon).
+
+   3. Select Aggregrate by property and choose video as the Blueprint.
+
+   4. Select Like Count as Property and Sum as the Function
+
+   <img width="610" alt="image" src="https://github.com/user-attachments/assets/3cf8acb0-6645-40bb-b467-a2ffcb4043f5">
+
+   5. Click Save.
+
+</details>
+
+
+<details>
+ <summary>Setup Comments widget</summary>
+   
+   1. `Click +`Widget and select Number Chart.
+
+   2. Title: Comments, (add the metric icon).
+
+   3. Select Aggregrate by property and choose video as the Blueprint.
+
+   4. Select Comment Count as Property and Sum as the Function
+
+   <img width="610" alt="image" src="https://github.com/user-attachments/assets/9d484f27-aa48-4c81-ade3-bd1b720d9bed">
+
+   5. Click Save.
+
+</details>
+
+
+<details>
+ <summary>Setup Video Lists widget</summary>
+   
+   1. `Click +` Widget and select Table.
+
+   2. Title: Video Lists, (add the store icon).
+
+   3. Select Video as the Blueprint.
+
+   4. Add Description and ThumbnailURL as excluded property.
+
+   <img width="612" alt="image" src="https://github.com/user-attachments/assets/c947e440-908c-472a-8a58-8dd65c8fbc8e">
+
+   5. Click Save.
+
+</details>
+
+
+<details>
+ <summary>Setup View Count widget</summary>
+   
+   1. `Click +` Widget and select Pie Chart.
+
+   2. Title: View Count, (add the pie icon).
+
+   3. Choose video as the Blueprint.
+
+   4. Select Breakdown Property as View Count
+
+   <img width="605" alt="image" src="https://github.com/user-attachments/assets/0757af44-b6b3-45bd-9765-d9f5eea199df">
+
+   4. Click Save.
+
+</details>
+
+> 💡 **METRIC WIDGET GROUPINGS**  
+> It would be visually cleaner and more informative to group related widgets, such as the **Line Chart** and **Number Chart** widgets, side by side for easier comparison. You can replicate more examples by checking our dora metrics dashboard on the [demo environment](https://demo.getport.io/organization/home).
+
+<img width="1104" alt="image" src="https://github.com/user-attachments/assets/8dd333a0-eb42-45fa-9f80-78d96f111238">`
