@@ -199,7 +199,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
 ## GitHub Workflow
 
-Create a workflow file under `.github/workflows/ingest_data.yml` with the following content:
+Create a workflow file under `.github/workflows/youtube-ingest.yml` with the following content:
 
 <details>
 <summary>Github Workflow Script</summary>
