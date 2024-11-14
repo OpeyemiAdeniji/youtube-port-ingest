@@ -37,7 +37,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 1. **Create the `playlist` and `video` blueprints**:
    - Navigate to the [Builder](https://app.getport.io/settings/data-model) page in Port.
    - Click **+ Blueprint** and select **Edit JSON**.
-   - Paste the following configuration:
+   - Paste the following configuration for both playlist and video respectively:
 
   <details>
   <summary>Click to copy Playlist and Video Blueprint JSON</summary>
