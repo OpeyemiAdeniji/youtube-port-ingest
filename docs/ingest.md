@@ -5,9 +5,9 @@ This guide provides a comprehensive walkthrough for creating a self-service acti
 > Ingest YouTube playlist data into Port for streamlined management and integration.
 > 
 >  **Content Management**: Keep track of video details within your internal software catalog.
-</br>
+>
 >  **Analytics**: Integrate video data for better insights and decision-making.
-</br>
+>
 >  **Automation**: Automatically update your Port account with video and playlist metadata.
 
 ## Prerequisites
@@ -34,13 +34,13 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
 ### Import Youtube Resources
 
-1. **Create the `playlist` blueprint**:
-   - Navigate to the **Builder** page in Port.
+1. **Create the `playlist` and `video` blueprints**:
+   - Navigate to the [Builder](https://app.getport.io/settings/data-model) page in Port.
    - Click **+ Blueprint** and select **Edit JSON**.
    - Paste the following configuration:
 
   <details>
-  <summary>Click to copy Playlist Blueprint JSON</summary>
+  <summary>Click to copy Playlist and Video Blueprint JSON</summary>
 
    ```json
 {
@@ -79,15 +79,8 @@ To execute this workflow, add the following secrets to your GitHub repository:
      }
 }
 ```
-</details>
 
-2. **Create the `video` blueprint**:
-   - Navigate to the **Builder** page in Port.
-   - Click **+ Blueprint** and select **Edit JSON**.
-   - Paste the following configuration:
 
- <details>
- <summary>Click to copy Video Blueprint JSON</summary>
 
    ```json
 {
@@ -152,11 +145,13 @@ To execute this workflow, add the following secrets to your GitHub repository:
 <details>
 <summary>Click to copy Port Action JSON</summary>
    
-> 💡 **TIP**  
-> 
-> - `<GITHUB-ORG>` – your GitHub organization or user name.
-> - `<GITHUB-REPO-NAME>` – your GitHub repository name.
-   
+:::💡Tip
+
+- `<GITHUB-ORG>` – your GitHub organization or user name.
+- `<GITHUB-REPO-NAME>` – your GitHub repository name.
+
+:::
+  
    ```json
    {
       "identifier": "ingest-youtube-playlist",
@@ -183,7 +178,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
         "type": "GITHUB",
         "org": "<GITHUB-ORG>",
         "repo": "<GITHUB-REPO-NAME>",
-        "workflow": "newone.yml",
+        "workflow": "youtube-ingest.yml",
         "workflowInputs": {
           "{{ spreadValue() }}": "{{ .inputs }}",
           "port_context": {
