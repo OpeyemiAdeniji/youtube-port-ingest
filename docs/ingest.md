@@ -247,8 +247,8 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -d '{
-              "message": "Setting up Environment",
-              "statusLabel": "Setting up Enviroment"
+              "message": "Setting up Environment and generating Access Token",
+              "statusLabel": "Setting up Enviroment and generating Access Token"
             }'
 
   fetch_playlist_metadata:
