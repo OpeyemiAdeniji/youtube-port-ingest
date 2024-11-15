@@ -149,8 +149,8 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -d '{
-              "message": "Migrating playlist data to Port has commenced PLAYLIST_ID - '$PLAYLIST_ID'",
-              "statusLabel": "Sending Playlist to Port"
+              "message": "ingesting playlist data to Port has commenced PLAYLIST_ID - '$PLAYLIST_ID'",
+              "statusLabel": "ingesting Playlist to Port"
             }'
 
       - name: Push Playlist Data to Port
@@ -175,11 +175,11 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -d '{
-              "message": "Successfully migrated playlist data to Port PLAYLIST_ID - '$PLAYLIST_ID'",
-              "statusLabel": "Playlist Pushed"
+              "message": "Successfully ingested playlist data to Port PLAYLIST_ID - '$PLAYLIST_ID'",
+              "statusLabel": "Playlist ingested"
             }'
 
-  fetch_and_migrate_videos:
+  fetch_and_ingest_videos:
     needs: push_playlist_to_port
     runs-on: ubuntu-latest
     env:
@@ -210,11 +210,11 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -d '{
-              "message": "Extraction and Migration of video data from YouTube has commenced PLAYLIST_ID - '$PLAYLIST_ID'",
-              "statusLabel": "Fetching and Migrating Videos"
+              "message": "Extraction and ingesting of video data from YouTube has commenced PLAYLIST_ID - '$PLAYLIST_ID'",
+              "statusLabel": "Fetching and ingesting Videos"
             }'
 
-      - name: Collect Video Data and Migrate
+      - name: Collect Video Data and Ingest
         id: collect_videos
         run: |
           # Process playlist videos
@@ -308,8 +308,8 @@ jobs:
             -H "Content-Type: application/json" \
             -H "Authorization: Bearer $ACCESS_TOKEN" \
             -d '{
-              "message": "Successfully fetched and migrated all videos PLAYLIST_ID - '$PLAYLIST_ID'",
-              "statusLabel": "Videos Fetched and Migrated"
+              "message": "Successfully fetched and ingested all videos PLAYLIST_ID - '$PLAYLIST_ID'",
+              "statusLabel": "Videos Fetched and ingested"
             }'
 
       - name: Handle Job Completion
