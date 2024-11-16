@@ -1,7 +1,7 @@
 # Ingest YouTube Playlist Data into Port
 This guide provides a comprehensive walkthrough for creating a self-service action in Port that uses a GitHub workflow to automate the ingestion of YouTube playlist data into Port.
 
-> [!NOTE]  
+> [!Use cases]  
 > **Content Management**: Keep track of video details within your internal software catalog.
 >
 > **Analytics**: Integrate video data for better insights and decision-making.
@@ -54,7 +54,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
      "identifier": "playlist",
      "description": "This blueprint represents a YouTube playlist",
      "title": "playlist",
-     "icon": "Widget",
+     "icon": "Youtrack",
      "schema": {
        "properties": {
          "description": {
@@ -91,7 +91,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
     "identifier": "video",
     "description": "This blueprint represents a video in our software catalog",
     "title": "video",
-    "icon": "Widget",
+    "icon": "Youtrack",
     "schema": {
       "properties": {
         "description": {
@@ -161,7 +161,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
           "properties": {
             "playlistid": {
               "type": "string",
-              "title": "playlistid"
+              "title": "Playlist ID"
             }
           },
           "required": [
@@ -193,7 +193,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
 ## GitHub Workflow
 
-Create a workflow file under `.github/workflows/youtube-ingest.yml` with the following content:
+Create a GitHub workflow file under `.github/workflows/youtube-ingest.yml` to act as the backend for the Port action, using the following content:
 
 <details>
 <summary>Github Workflow Script</summary>
@@ -517,6 +517,7 @@ jobs:
 1. On the [self-service](https://app.getport.io/self-serve) page, select the action
 2. Fill in the required properties (YouTube Playlist ID).
 3. Click **Execute** to trigger the GitHub workflow.
+4. Verify that the video and playlist entities have been ingested by checking your Port [catalog](https://app.getport.io/playlists)
 
 
 ## Visualization
@@ -534,8 +535,11 @@ This will create a new empty dashboard. Let's get ready-to-add widgets
 
 
 ### Adding widgets
+
+We will create 5 widgets inside the dashboard to display the key metrics we are interested in.
+
 <details>
- <summary>Setup Views widget</summary>
+ <summary>Setup number of views widget</summary>
    
    1. `Click +` Widget and select Number Chart.
 
@@ -553,7 +557,7 @@ This will create a new empty dashboard. Let's get ready-to-add widgets
 
 
 <details>
- <summary>Setup Likes widget</summary>
+ <summary>Setup Video likes widget</summary>
    
    1. `Click +` Widget and select Number Chart.
 
@@ -571,7 +575,7 @@ This will create a new empty dashboard. Let's get ready-to-add widgets
 
 
 <details>
- <summary>Setup Comments widget</summary>
+ <summary>Setup video/playlist comments widget</summary>
    
    1. `Click +`Widget and select Number Chart.
 
