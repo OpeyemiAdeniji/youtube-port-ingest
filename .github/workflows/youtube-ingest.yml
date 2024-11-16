@@ -253,7 +253,7 @@ jobs:
                     commentCount: ($commentCount | tonumber)
                   },
                   relations: {
-                    belongs_to_playlist: $playlist_id
+                    playlist: $playlist_id
                   }
                 }')
               

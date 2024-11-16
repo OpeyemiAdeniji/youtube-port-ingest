@@ -1,21 +1,28 @@
 # Ingest YouTube Playlist Data into Port
 This guide provides a comprehensive walkthrough for creating a self-service action in Port that uses a GitHub workflow to automate the ingestion of YouTube playlist data into Port.
 
-> 💡 **USE-CASES**  
+> [!NOTE]  
+> **Content Management**: Keep track of video details within your internal software catalog.
+>
+> **Analytics**: Integrate video data for better insights and decision-making.
+>
+> **Automation**: Automatically update your Port account with video and playlist metadata.
+
+<!-- > 💡 **USE-CASES**  
 > Ingest YouTube playlist data into Port for streamlined management and integration.
 > 
 >  **Content Management**: Keep track of video details within your internal software catalog.
 >
 >  **Analytics**: Integrate video data for better insights and decision-making.
 >
->  **Automation**: Automatically update your Port account with video and playlist metadata.
+>  **Automation**: Automatically update your Port account with video and playlist metadata. -->
 
 ## Prerequisites
 
 Ensure you have the following before getting started:
 
 - **Port's GitHub Integration**: Install it by clicking [here](https://github.com/apps/getport-io/installations/select_target). This is essential for Port to interact with your GitHub repositories.
-- **Port Actions Knowledge**: Understanding how to create and use Port actions.Learn the basics [here](https://docs.getport.io/actions-and-automations/create-self-service-experiences/setup-ui-for-action/).
+- **Port Actions Knowledge**: Understanding how to create and use Port actions. Learn the basics [here](https://docs.getport.io/actions-and-automations/create-self-service-experiences/setup-ui-for-action/).
 - **GitHub Repository**: A repository to store your GitHub workflow file.
 - This guide assumes the presence of a blueprint. If you haven't done so yet, initiate the setup of your data model by referring to this [guide](https://docs.getport.io/build-your-software-catalog/customize-integrations/configure-data-model/) first.
 
@@ -34,13 +41,13 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
 ### Import Youtube Resources
 
-1. **Create the `playlist` and `video` blueprints**:
+1. **Create the `playlist` blueprints**:
    - Navigate to the [Builder](https://app.getport.io/settings/data-model) page in Port.
    - Click **+ Blueprint** and select **Edit JSON**.
-   - Paste the following configuration for both playlist and video respectively:
-
+   - Paste the following configuration:
+   
   <details>
-  <summary>Click to copy Playlist and Video Blueprint JSON</summary>
+  <summary>Playlist blueprint (Click to copy)</summary>
 
    ```json
 {
@@ -50,14 +57,6 @@ To execute this workflow, add the following secrets to your GitHub repository:
      "icon": "Widget",
      "schema": {
        "properties": {
-         "playlistId": {
-           "type": "string",
-           "title": "Playlist ID"
-         },
-         "title": {
-           "type": "string",
-           "title": "Title"
-         },
          "description": {
            "type": "string",
            "title": "Description"
@@ -74,13 +73,18 @@ To execute this workflow, add the following secrets to your GitHub repository:
            "type": "string",
            "title": "Published At"
          }
-       },
-       "required": ["playlistId", "title"]
+       }
      }
 }
 ```
+</details>
 
+2. **Create the `videos` blueprints**:
 
+    Repeat the same process as in playlist blueprint and paste the following configurations:
+
+<details>
+<summary>Video blueprint (Click to copy)</summary>
 
    ```json
 {
@@ -90,14 +94,6 @@ To execute this workflow, add the following secrets to your GitHub repository:
     "icon": "Widget",
     "schema": {
       "properties": {
-        "videoId": {
-          "type": "string",
-          "title": "Video ID"
-        },
-        "title": {
-          "type": "string",
-          "title": "Title"
-        },
         "description": {
           "type": "string",
           "title": "Description"
@@ -122,12 +118,11 @@ To execute this workflow, add the following secrets to your GitHub repository:
           "type": "number",
           "title": "Comment Count"
         }
-      },
-      "required": ["videoId", "title"]
+      }
     },
     "relations": {
-      "belongs_to_playlist": {
-        "title": "Belongs to Playlist",
+      "playlist": {
+        "title": "Playlist",
         "target": "playlist",
         "required": false,
         "many": false
@@ -143,12 +138,14 @@ To execute this workflow, add the following secrets to your GitHub repository:
 3. Paste the following action configuration:
 
 <details>
-<summary>Click to copy Port Action JSON</summary>
+<summary>Port Action (Click to copy)</summary>
    
-:::💡Tip
+:::tip Replace placeholders
 
 - `<GITHUB-ORG>` – your GitHub organization or user name.
 - `<GITHUB-REPO-NAME>` – your GitHub repository name.
+
+  **Note:** The provided workflow file is named `youtube-ingest.yml`. You can rename it to any name you prefer, as long as it resides in the `.github/workflows/` folder path.
 
 :::
   
@@ -292,8 +289,6 @@ jobs:
             identifier: .id,
             title: .snippet.title,
             properties: {
-              playlistId: .id,
-              title: .snippet.title,
               description: .snippet.description,
               thumbnailUrl: .snippet.thumbnails.default.url,
               videoCount: .contentDetails.itemCount,
@@ -446,9 +441,7 @@ jobs:
                 '{
                   identifier: $id,
                   title: $title,
-                  properties: {
-                    videoId: $id,
-                    title: $title,
+                  properties: {       
                     description: $description,
                     thumbnailUrl: $thumbnailUrl,
                     duration: $duration,
