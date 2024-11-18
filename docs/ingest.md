@@ -47,7 +47,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
    
   <details>
 
-    Paste the following configuration:
+  Paste the following configuration:
 
   <summary>Playlist blueprint (Click to copy)</summary>
 
