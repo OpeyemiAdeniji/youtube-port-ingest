@@ -44,16 +44,16 @@ To execute this workflow, add the following secrets to your GitHub repository:
 1. **Create the `playlist` blueprints**:
    - Navigate to the [Builder](https://app.getport.io/settings/data-model) page in Port.
    - Click **+ Blueprint** and select **Edit JSON**.
-   - Paste the following configuration:
    
   <details>
+    Paste the following configuration:
   <summary>Playlist blueprint (Click to copy)</summary>
 
    ```json
 {
      "identifier": "playlist",
      "description": "This blueprint represents a YouTube playlist",
-     "title": "playlist",
+     "title": "Playlist",
      "icon": "Youtrack",
      "schema": {
        "properties": {
@@ -81,16 +81,15 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
 2. **Create the `videos` blueprints**:
 
-    Repeat the same process as in playlist blueprint and paste the following configurations:
-
 <details>
+  Repeat the same process as in playlist blueprint and paste the following configurations:
 <summary>Video blueprint (Click to copy)</summary>
 
    ```json
 {
     "identifier": "video",
     "description": "This blueprint represents a video in our software catalog",
-    "title": "video",
+    "title": "Video",
     "icon": "Youtrack",
     "schema": {
       "properties": {
@@ -135,7 +134,6 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
 1. Go to the **Self-Service** page in Port.
 2. Click **+ New Action** and select **Edit JSON**.
-3. Paste the following action configuration:
 
 <details>
 <summary>Port Action (Click to copy)</summary>
@@ -148,6 +146,8 @@ To execute this workflow, add the following secrets to your GitHub repository:
   **Note:** The provided workflow file is named `youtube-ingest.yml`. You can rename it to any name you prefer, as long as it resides in the `.github/workflows/` folder path.
 
 :::
+
+ Paste the following action configuration:
   
    ```json
    {
@@ -514,7 +514,7 @@ jobs:
 
 ## Testing the Action
 
-1. On the [self-service](https://app.getport.io/self-serve) page, select the action
+1. On the [self-service](https://app.getport.io/self-serve) page, select the Ingest Youtube Playlist action
 2. Fill in the required properties (YouTube Playlist ID).
 3. Click **Execute** to trigger the GitHub workflow.
 4. Verify that the video and playlist entities have been ingested by checking your Port [catalog](https://app.getport.io/playlists)
@@ -531,7 +531,7 @@ By leveraging Port's Dashboards, you can create custom dashboards to track the m
 3. Select **New dashboard**.
 4. Name the dashboard (e.g., Playlist Metrics), choose an icon if desired, and click Create.
    
-This will create a new empty dashboard. Let's get ready-to-add widgets
+This will create a new empty dashboard. Let's get ready to add widgets.
 
 
 ### Adding widgets
@@ -543,15 +543,17 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
    
    1. `Click +` Widget and select Number Chart.
 
-   2. Title: Views, (add the metric icon).
+   2. Title: Enter **Views** in the input box
 
-   3. Select Aggregrate by property and choose video as the Blueprint.
+   3. Add an optional icon if you prefer.
 
-   4. Select View Count as Property and Sum as the Function
+   4. Select `Aggregrate by` property and choose video as the Blueprint.
+
+   5. Select `View Count` as Property and `Sum` as the Function
 
    <img width="613" alt="image" src="https://github.com/user-attachments/assets/14fec310-7bf6-42ad-b9b7-5e850c234133">
 
-   5. Click Save.
+   6. Click Save.
 
 </details>
 
@@ -561,15 +563,17 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
    
    1. `Click +` Widget and select Number Chart.
 
-   2. Title: Likes, (add the star icon).
+   2. Title: Enter **Likes** in the input box.
 
-   3. Select Aggregrate by property and choose video as the Blueprint.
+   3. Add an optional icon if you prefer.
 
-   4. Select Like Count as Property and Sum as the Function
+   4. Select `Aggregrate by` property and choose video as the Blueprint.
+
+   5. Select Like Count as Property and Sum as the Function
 
    <img width="610" alt="image" src="https://github.com/user-attachments/assets/3cf8acb0-6645-40bb-b467-a2ffcb4043f5">
 
-   5. Click Save.
+   6. Click Save.
 
 </details>
 
@@ -579,15 +583,17 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
    
    1. `Click +`Widget and select Number Chart.
 
-   2. Title: Comments, (add the metric icon).
+   2. Title: Enter **Comments** in the input box.
 
-   3. Select Aggregrate by property and choose video as the Blueprint.
+   3. Add an optional icon if you prefer.
 
-   4. Select Comment Count as Property and Sum as the Function
+   4. Select `Aggregrate by` property and choose video as the Blueprint.
+
+   5. Select Comment Count as Property and Sum as the Function
 
    <img width="610" alt="image" src="https://github.com/user-attachments/assets/9d484f27-aa48-4c81-ade3-bd1b720d9bed">
 
-   5. Click Save.
+   6. Click Save.
 
 </details>
 
@@ -597,15 +603,17 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
    
    1. `Click +` Widget and select Table.
 
-   2. Title: Video Lists, (add the store icon).
+   2. Title: Enter **Video Lists** in the input box.
 
-   3. Select Video as the Blueprint.
+   3. Add an optional icon if you prefer.
 
-   4. Add Description and ThumbnailURL as excluded property.
+   4. Select Video as the Blueprint.
+
+   5. Add Description and ThumbnailURL as excluded property.
 
    <img width="612" alt="image" src="https://github.com/user-attachments/assets/c947e440-908c-472a-8a58-8dd65c8fbc8e">
 
-   5. Click Save.
+   6. Click Save.
 
 </details>
 
@@ -615,15 +623,17 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
    
    1. `Click +` Widget and select Pie Chart.
 
-   2. Title: View Count, (add the pie icon).
+   2. Title: Enter **View Count** in the input box.
 
-   3. Choose video as the Blueprint.
+   3. Add an optional icon if you prefer.
 
-   4. Select Breakdown Property as View Count
+   4. Choose video as the Blueprint.
+
+   5. Select Breakdown Property as View Count
 
    <img width="605" alt="image" src="https://github.com/user-attachments/assets/0757af44-b6b3-45bd-9765-d9f5eea199df">
 
-   4. Click Save.
+   6. Click Save.
 
 </details>
 
