@@ -564,7 +564,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select **Aggregrate by** option under the **Chart type** and choose **Video** as the blueprint.
+   4. Select **Aggregrate by property** option under the **Chart type** and choose **Video** as the blueprint.
 
    5. Select `View Count` as Property and `Sum` as the Function
 
@@ -584,7 +584,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select **Aggregrate by** option under the **Chart type** and choose **Video** as the blueprint.
+   4. Select **Aggregrate by property** option under the **Chart type** and choose **Video** as the blueprint.
 
    5. Select Like Count as Property and Sum as the Function
 
@@ -604,7 +604,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select **Aggregrate by** option under the **Chart type** and choose **Video** as the blueprint.
+   4. Select **Aggregrate by property** option under the **Chart type** and choose **Video** as the blueprint.
 
    5. Select Comment Count as Property and Sum as the Function
 
