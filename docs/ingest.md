@@ -46,7 +46,9 @@ To execute this workflow, add the following secrets to your GitHub repository:
    - Click **+ Blueprint** and select **Edit JSON**.
    
   <details>
+
     Paste the following configuration:
+
   <summary>Playlist blueprint (Click to copy)</summary>
 
    ```json
@@ -82,7 +84,9 @@ To execute this workflow, add the following secrets to your GitHub repository:
 2. **Create the `videos` blueprints**:
 
 <details>
+
   Repeat the same process as in playlist blueprint and paste the following configurations:
+  
 <summary>Video blueprint (Click to copy)</summary>
 
    ```json
