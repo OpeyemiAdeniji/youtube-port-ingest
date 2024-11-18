@@ -53,30 +53,34 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
    ```json
 {
-     "identifier": "playlist",
-     "description": "This blueprint represents a YouTube playlist",
-     "title": "Playlist",
-     "icon": "Youtrack",
-     "schema": {
-       "properties": {
-         "description": {
-           "type": "string",
-           "title": "Description"
-         },
-         "thumbnailUrl": {
-           "type": "string",
-           "title": "Thumbnail URL"
-         },
-         "videoCount": {
-           "type": "number",
-           "title": "Number of Videos"
-         },
-         "created_at": {
-           "type": "string",
-           "title": "Published At"
-         }
-       }
-     }
+  "identifier": "playlist",
+  "title": "Playlist",
+  "icon": "Youtrack",
+  "schema": {
+    "properties": {
+      "description": {
+        "type": "string",
+        "title": "Description"
+      },
+      "videoCount": {
+        "type": "number",
+        "title": "Video Count"
+      },
+      "thumbnailUrl": {
+        "type": "string",
+        "title": "Thumbnail URL"
+      },
+      "created_at": {
+        "type": "string",
+        "title": "CreatedAt"
+      }
+    },
+    "required": []
+  },
+  "mirrorProperties": {},
+  "calculationProperties": {},
+  "aggregationProperties": {},
+  "relations": {}
 }
 ```
 </details>
@@ -91,46 +95,51 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
    ```json
 {
-    "identifier": "video",
-    "description": "This blueprint represents a video in our software catalog",
-    "title": "Video",
-    "icon": "Youtrack",
-    "schema": {
-      "properties": {
-        "description": {
-          "type": "string",
-          "title": "Description"
-        },
-        "thumbnailUrl": {
-          "type": "string",
-          "title": "Thumbnail URL"
-        },
-        "duration": {
-          "type": "string",
-          "title": "Duration"
-        },
-        "viewCount": {
-          "type": "number",
-          "title": "View Count"
-        },
-        "likeCount": {
-          "type": "number",
-          "title": "Like Count"
-        },
-        "commentCount": {
-          "type": "number",
-          "title": "Comment Count"
-        }
+  "identifier": "video",
+  "description": "This blueprint represents a video in our software catalog",
+  "title": "Video",
+  "icon": "Youtrack",
+  "schema": {
+    "properties": {
+      "description": {
+        "type": "string",
+        "title": "Description"
+      },
+      "thumbnailUrl": {
+        "type": "string",
+        "title": "Thumbnail URL"
+      },
+      "duration": {
+        "type": "string",
+        "title": "Duration"
+      },
+      "viewCount": {
+        "type": "number",
+        "title": "View Count"
+      },
+      "likeCount": {
+        "type": "number",
+        "title": "Like Count"
+      },
+      "commentCount": {
+        "type": "number",
+        "title": "Comment Count"
       }
     },
-    "relations": {
-      "playlist": {
-        "title": "Playlist",
-        "target": "playlist",
-        "required": false,
-        "many": false
-      }
+    "required": []
+  },
+  "mirrorProperties": {},
+  "calculationProperties": {},
+  "aggregationProperties": {},
+  "relations": {
+    "playlist": {
+      "title": "Playlist",
+      "target": "playlist",
+      "required": false,
+      "many": false
     }
+  }
+}
 ```
 </details>
 
@@ -154,44 +163,48 @@ To execute this workflow, add the following secrets to your GitHub repository:
  Paste the following action configuration:
   
    ```json
-   {
-      "identifier": "ingest-youtube-playlist",
-      "title": "Ingest Youtube Playlist",
-      "icon": "Youtrack",
-      "trigger": {
-        "type": "self-service",
-        "operation": "CREATE",
-        "userInputs": {
-          "properties": {
-            "playlistid": {
-              "type": "string",
-              "title": "Playlist ID"
-            }
-          },
-          "required": [
-            "playlistid"
-          ],
-          "order": []
-        },
-        "blueprintIdentifier": "playlist"
-      },
-      "invocationMethod": {
-        "type": "GITHUB",
-        "org": "<GITHUB-ORG>",
-        "repo": "<GITHUB-REPO-NAME>",
-        "workflow": "youtube-ingest.yml",
-        "workflowInputs": {
-          "{{ spreadValue() }}": "{{ .inputs }}",
-          "port_context": {
-            "runId": "{{ .run.id }}",
-            "blueprint": "{{ .action.blueprint }}"
+{
+    "identifier": "ingest-youtube-playlist",
+    "title": "Ingest Youtube Playlist",
+    "icon": "Youtrack",
+    "description": "Add a YouTube playlist and create its corresponding playlist entity.",
+    "trigger": {
+      "type": "self-service",
+      "operation": "CREATE",
+      "userInputs": {
+        "properties": {
+          "playlistid": {
+            "icon": "DefaultProperty",
+            "type": "string",
+            "title": "Playlist ID"
           }
         },
-        "reportWorkflowStatus": true
+        "required": [
+          "playlistid"
+        ],
+        "order": [
+          "playlistid"
+        ]
       },
-      "requiredApproval": false
-    }
-   
+      "blueprintIdentifier": "playlist"
+    },
+    "invocationMethod": {
+      "type": "GITHUB",
+      "org": "<GITHUB-ORG>",
+      "repo": "<GITHUB-REPO-NAME>",
+      "workflow": "youtube-ingest.yml",
+      "workflowInputs": {
+        "{{ spreadValue() }}": "{{ .inputs }}",
+        "port_context": {
+          "runId": "{{ .run.id }}",
+          "blueprint": "{{ .action.blueprint }}"
+        }
+      },
+      "reportWorkflowStatus": true
+    },
+    "requiredApproval": false
+}
+
    ```
  </details>
 
@@ -454,7 +467,7 @@ jobs:
                     commentCount: ($commentCount | tonumber)
                   },
                   relations: {
-                    belongs_to_playlist: $playlist_id
+                    playlist: $playlist_id
                   }
                 }')
               
@@ -551,7 +564,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select `Aggregrate by` property and choose video as the Blueprint.
+   4. Select **Aggregrate by** option under the **Chart type** and choose **Video** as the blueprint.
 
    5. Select `View Count` as Property and `Sum` as the Function
 
@@ -571,7 +584,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select `Aggregrate by` property and choose video as the Blueprint.
+   4. Select **Aggregrate by** option under the **Chart type** and choose **Video** as the blueprint.
 
    5. Select Like Count as Property and Sum as the Function
 
@@ -591,7 +604,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select `Aggregrate by` property and choose video as the Blueprint.
+   4. Select **Aggregrate by** option under the **Chart type** and choose **Video** as the blueprint.
 
    5. Select Comment Count as Property and Sum as the Function
 
@@ -611,7 +624,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Select Video as the Blueprint.
+   4. Choose **Video** as the blueprint.
 
    5. Add Description and ThumbnailURL as excluded property.
 
@@ -631,7 +644,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    3. Add an optional icon if you prefer.
 
-   4. Choose video as the Blueprint.
+   4. Choose **Video** as the blueprint.
 
    5. Select Breakdown Property as View Count
 
@@ -647,3 +660,6 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 <img width="1104" alt="image" src="https://github.com/user-attachments/assets/8dd333a0-eb42-45fa-9f80-78d96f111238">
 
 </details>
+
+## Conclusion
+Automating the ingestion of YouTube playlist and video data into Port is not just an operational improvement but a strategic advantage. This guide aims to facilitate seamless integration, empowering teams to harness insights effortlessly and streamline content management. In essence, Port becomes an ecosystem that supports your development journey, making it simpler and more efficient to manage and analyze video content.
