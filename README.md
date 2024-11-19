@@ -40,7 +40,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
   Paste the following configuration:
 
-  <summary>Playlist blueprint (Click to copy)</summary>
+  <summary>Playlist blueprint (click to expand)</summary>
 
    ```json
 {
@@ -82,7 +82,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 
   Repeat the same process as in playlist blueprint and paste the following configurations:
   
-<summary>Video blueprint (Click to copy)</summary>
+<summary>Video blueprint (click to expand)</summary>
 
    ```json
 {
@@ -140,7 +140,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 2. Click **+ New Action** and select **Edit JSON**.
 
 <details>
-<summary>Port Action (Click to copy)</summary>
+<summary>Port Action (click to expand)</summary>
    
 :::tip Replace placeholders
 
@@ -204,7 +204,7 @@ To execute this workflow, add the following secrets to your GitHub repository:
 Create a GitHub workflow file under `.github/workflows/youtube-ingest.yml` to act as the backend for the Port action, using the following content:
 
 <details>
-<summary>Github Workflow Script</summary>
+<summary>Github Workflow (click to expand)</summary>
   
 ```yaml
 name: Update Port with YouTube Playlist Data
