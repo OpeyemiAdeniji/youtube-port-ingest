@@ -559,7 +559,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    5. Select `View Count` as Property and `Sum` as the Function
 
-   <img width="613" alt="image" src="https://github.com/user-attachments/assets/14fec310-7bf6-42ad-b9b7-5e850c234133">
+   <img width="629" alt="image" src="https://github.com/user-attachments/assets/f87fc98e-5f43-49ed-8efa-c966ce03d80a">
 
    6. Click Save.
 
@@ -579,7 +579,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    5. Select Like Count as Property and Sum as the Function
 
-   <img width="610" alt="image" src="https://github.com/user-attachments/assets/3cf8acb0-6645-40bb-b467-a2ffcb4043f5">
+   <img width="625" alt="image" src="https://github.com/user-attachments/assets/aa432bd5-1549-42e8-a7c1-e1f1e94c1184">
 
    6. Click Save.
 
@@ -599,7 +599,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    5. Select Comment Count as Property and Sum as the Function
 
-   <img width="610" alt="image" src="https://github.com/user-attachments/assets/9d484f27-aa48-4c81-ade3-bd1b720d9bed">
+   <img width="622" alt="image" src="https://github.com/user-attachments/assets/e3525ade-748d-4783-9878-2862aa097647">
 
    6. Click Save.
 
@@ -619,7 +619,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    5. Add Description and ThumbnailURL as excluded property.
 
-   <img width="612" alt="image" src="https://github.com/user-attachments/assets/c947e440-908c-472a-8a58-8dd65c8fbc8e">
+   <img width="623" alt="image" src="https://github.com/user-attachments/assets/7311854f-a905-4967-9c48-b12e4dd03f09">
 
    6. Click Save.
 
@@ -639,7 +639,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 
    5. Select Breakdown Property as View Count
 
-   <img width="605" alt="image" src="https://github.com/user-attachments/assets/0757af44-b6b3-45bd-9765-d9f5eea199df">
+   <img width="625" alt="image" src="https://github.com/user-attachments/assets/42e9b9e0-c7f0-4112-877e-16cd54720254">
 
    6. Click Save.
 
@@ -648,7 +648,7 @@ We will create 5 widgets inside the dashboard to display the key metrics we are 
 <details>
  <summary>Overall Dashboard View</summary>
 
-<img width="1104" alt="image" src="https://github.com/user-attachments/assets/8dd333a0-eb42-45fa-9f80-78d96f111238">
+ <img width="1201" alt="image" src="https://github.com/user-attachments/assets/a7bed816-8835-47db-ac27-e4d9805118c3">
 
 </details>
 
